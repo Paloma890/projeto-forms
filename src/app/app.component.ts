@@ -13,11 +13,13 @@ import { take } from 'rxjs';
   styleUrl: './app.component.scss'
 })
 export class AppComponent implements OnInit{
+  isInEditMode: boolean = false;
+
   userSelectedIndex: number | undefined;
   userSelected: IUser = {} as IUser;
 
   usersList: IUser[] = [];
-  currentTabIndex: number = 0;
+
 
   constructor(
     private readonly _contriesService: CountriesService,
@@ -45,7 +47,14 @@ export class AppComponent implements OnInit{
       if(userFound) {
         this.userSelectedIndex = userIndex;
         this.userSelected = structuredClone(userFound);
-        this.currentTabIndex = 0;
       }
+  }
+
+  onCancelButton() {
+    this.isInEditMode = false;
+  }
+
+  onEditButton() {
+    this.isInEditMode = true;
   }
 }

@@ -3,6 +3,7 @@ import { IPhone } from '../../../../interfaces/user/phone-interface';
 import { PhoneTypeEnum } from '../../../../enums/phone-type.enum';
 import { IPhoneToDisplay } from '../../../../interfaces/phone-to-display.interface';
 import { phoneTypeDescritonMap } from '../../../../utils/phone-type-description-map';
+import { preparePhoneList } from '../../../../utils/prepare-phone-list';
 
 
 @Component({
@@ -27,14 +28,20 @@ export class PhoneListComponent implements OnChanges{
   preparePhoneListToDisplay() {
     this.phoneListToDisplay = [];
 
-    Object.keys(phoneTypeDescritonMap).map(Number).forEach((phoneType: number) => {
-      const phoneFound = this.userPhoneList?.find((userPhone: IPhone) => userPhone.type === phoneType)
+    const originalUserPhoneList = this.userPhoneList && this.userPhoneList.length > 0 ? this.userPhoneList : [];
 
-      this.phoneListToDisplay.push({
-        type: phoneTypeDescritonMap[phoneType as PhoneTypeEnum],
-        phoneNumber: phoneFound ? this.formatPhoneNumber(phoneFound) : '-',
-      });
+    preparePhoneList(originalUserPhoneList, true ,(phone) => {
+        this.phoneListToDisplay.push(phone);
     });
+
+    // Object.keys(phoneTypeDescritonMap).map(Number).forEach((phoneType: number) => {
+    //   const phoneFound = this.userPhoneList?.find((userPhone: IPhone) => userPhone.type === phoneType)
+
+    //   this.phoneListToDisplay.push({
+    //     type: phoneTypeDescritonMap[phoneType as PhoneTypeEnum],
+    //     phoneNumber: phoneFound ? this.formatPhoneNumber(phoneFound) : '-',
+    //   });
+    // });
   }
 
   formatPhoneNumber(phone: IPhone) {

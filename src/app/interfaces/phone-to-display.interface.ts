@@ -1,4 +1,6 @@
 export interface IPhoneToDisplay {
-  type: string;
-  phoneNumber: string
+  type: number;
+  typeDescription: string;
+  phoneNumber: string;
+
 }

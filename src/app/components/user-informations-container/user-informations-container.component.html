@@ -1,0 +1,30 @@
+<mat-tab-group [(selectedIndex)]="currentTabIndex">
+  <mat-tab label="Geral">
+    <app-general-informations
+    *ngIf="!isInEditMode"
+    [user]="userSelected"></app-general-informations>
+    <app-general-informations-edit
+    *ngIf="isInEditMode"
+    [userForm]="userForm"
+    [countriesList]="countriesList"
+    [statesList]="statesList"
+    (onCountrySelected)="onCountrySelected($event)"></app-general-informations-edit>
+  </mat-tab>
+  <mat-tab label="Contato">
+    <app-contact-informations
+    *ngIf="!isInEditMode"
+    [user]="userSelected"></app-contact-informations>
+    <app-contact-informations-edit
+    *ngIf="isInEditMode"
+    [userForm]="userForm"></app-contact-informations-edit>
+  </mat-tab>
+  <mat-tab label="Dependente">
+    <app-dependents-list
+    [dependentsList]="userSelected.dependentsList"></app-dependents-list>
+    <app-dependents-list-edit
+    [userform]="userForm"
+    (onRemoveDependent)="removeDependent($event)"
+    (onAddeDependent)="addDependent()"></app-dependents-list-edit>
+  </mat-tab>
+</mat-tab-group>
+
