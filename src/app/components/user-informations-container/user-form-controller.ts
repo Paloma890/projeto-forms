@@ -9,17 +9,22 @@ import { preparePhoneList } from "../../utils/prepare-phone-list";
 import { PhoneTypeEnum } from "../../enums/phone-type.enum";
 import { prepareAddressList } from "../../utils/prepare-address-list";
 import { requiredAddressValidator } from "../../utils/user-form-validators/required-address-validator";
+import { UserFormRawValueService } from "../../services/user-form-raw-value.service";
 
 export class UserFormController {
   userForm!: FormGroup;
 
   private emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-  private _fb = inject(FormBuilder);
+  private readonly _fb = inject(FormBuilder);
+  private readonly _userFormRawValueService = inject(UserFormRawValueService);
 
   constructor() {
     this.createUserForm();
+
+    this.watchUserFormValueChangesAndUpdateService();
   }
+
 
   get generalInformations(): FormGroup {
     return this.userForm.get('generalInformations') as FormGroup
@@ -37,6 +42,23 @@ export class UserFormController {
     return this.userForm.get('dependentsList') as FormArray;
   }
 
+  get contactInformations(): FormGroup {
+    return this.userForm.get('contactInformations') as FormGroup
+  }
+
+  get generalInformationsValid(): boolean {
+    return this.generalInformations.valid;
+  }
+
+  get contactInformationsValid(): boolean {
+    return this.contactInformations.valid;
+  }
+
+  get dependentsListValid(): boolean {
+    return this.dependentsList.valid;
+  }
+
+
   fulfillUserForm(user: IUser) {
       this.resetUserForm();
 
@@ -47,14 +69,19 @@ export class UserFormController {
       this.fulfillAddressList(user.addressList);
 
       this.fulfillDependentsList(user.dependentsList);
+
+      this.userForm.markAllAsTouched();
+      this.userForm.updateValueAndValidity();
   }
 
   addDependent() {
     this.dependentsList.push(this.createDependentGroup());
+    this.dependentsList.markAsDirty();
   }
 
   removeDependent(dependentIndex: number) {
     this.dependentsList.removeAt(dependentIndex);
+    this.dependentsList.markAsDirty();
   }
 
   private createDependentGroup(dependent: IDependent | null = null) {
@@ -68,8 +95,8 @@ export class UserFormController {
 
     return this._fb.group({
        name: [dependent.name, Validators.required],
-       age: [dependent.age, Validators.required],
-       document: [dependent.document, Validators.required]
+       age: [dependent.age.toString(), Validators.required],
+       document: [dependent.document.toString(), Validators.required]
     });
 
   }
@@ -151,5 +178,10 @@ export class UserFormController {
       }),
       dependentsList: this._fb.array([]),
     });
+  }
+
+  private watchUserFormValueChangesAndUpdateService() {
+    this.userForm.valueChanges.subscribe(() =>
+      this._userFormRawValueService.UserFormRwaValue = this.userForm.getRawValue());
   }
 }

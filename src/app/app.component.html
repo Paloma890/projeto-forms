@@ -1,18 +1,25 @@
 <div class="p-4 max-w-screen-xl mx-auto">
     <mat-card>
       <mat-card-content>
-          <app-users-list [usersList]="usersList" (onUserSelected)="onUserSelected($event)"></app-users-list>
+          <app-users-list
+            [isInEditMode]="isInEditMode"
+            [usersList]="usersList"
+            (onUserSelected)="onUserSelected($event)" ></app-users-list>
 
           <app-buttons-conteiner
             *ngIf="userSelectedIndex !== undefined"
             [isInEditMode]="isInEditMode"
-           (onEditButton)="onEditButton()"
-           (onCancelButton)="onCancelButton()"></app-buttons-conteiner>
+            [enableSaveButton]="enableSaveButton"
+            (onEditButton)="onEditButton()"
+            (onCancelButton)="onCancelButton()"
+            (onSaveButton)="onSaveButton()"></app-buttons-conteiner>
 
            <app-user-informations-container
-           [userSelected]="userSelected"
-           *ngIf="userSelectedIndex !== undefined"
-           [isInEditMode]="isInEditMode"></app-user-informations-container>
+            (onUserFormFirstChange)="onUserFormFirstChange()"
+            [userSelected]="userSelected"
+            *ngIf="userSelectedIndex !== undefined"
+            [isInEditMode]="isInEditMode"
+            (onFormStatusChange)="onFormStatusChange($event)"></app-user-informations-container>
 
       </mat-card-content>
     </mat-card>

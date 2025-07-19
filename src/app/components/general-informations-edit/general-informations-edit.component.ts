@@ -60,8 +60,10 @@ private watchCountryFormChangesAndFilter() {
 }
 
 private filterCountriesList(searchTerm: string) {
+  if(!searchTerm) return;
+
   this.countriesListFiltered = this.countriesList.filter(
-    (country) => country.name.toLocaleLowerCase().includes(searchTerm.toLocaleLowerCase().trim()));
+    (country) => country.name.toLowerCase().includes(searchTerm.toLowerCase().trim()));
 }
 
 private watchStateFormChangesAndFilter() {
@@ -69,8 +71,10 @@ private watchStateFormChangesAndFilter() {
 }
 
 private filterStatesList(searchTerm: string) {
+  if(!searchTerm) return;
+
   this.statesListFiltered = this.statesList.filter(
-    (state) => state.name.toLocaleLowerCase().includes(searchTerm.toLocaleLowerCase().trim()));
+    (state) => state.name.toLowerCase().includes(searchTerm.toLowerCase().trim()));
 }
 
 }
